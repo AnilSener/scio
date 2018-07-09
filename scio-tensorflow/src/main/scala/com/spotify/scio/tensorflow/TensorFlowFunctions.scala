@@ -25,7 +25,8 @@ import java.util.function.{Consumer, Function}
 import com.google.common.base.Charsets
 import com.spotify.featran.{FeatureExtractor, MultiFeatureExtractor}
 import com.spotify.scio.ScioContext
-import com.spotify.scio.io.{Tap, Taps, TextTap}
+import com.spotify.scio.avro.ProtobufIO
+import com.spotify.scio.io.{Tap, TextTap}
 import com.spotify.scio.nio.TextIO
 import com.spotify.scio.transforms.DoFnWithResource.ResourceType
 import com.spotify.scio.transforms.{DoFnWithResource, JavaAsyncDoFn}
@@ -313,7 +314,7 @@ class TFExampleSCollectionFunctions[T <: Example](val self: SCollection[T]) {
     val schemaPath = path.replaceAll("\\/+$", "") + "/" + schemaFilename
     if (self.context.isTest) {
       self.context.testOut(TFExampleIO(path))(self.asInstanceOf[SCollection[Example]])
-      self.context.testOut(ProtobufIO(schemaPath))(inferedSchema)
+      self.context.testOut(ProtobufIO[Schema](schemaPath))(inferedSchema)
       (self.saveAsInMemoryTap.asInstanceOf[Future[Tap[Example]]], inferedSchema.saveAsInMemoryTap)
     } else {
       import scala.concurrent.ExecutionContext.Implicits.global

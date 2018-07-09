@@ -593,6 +593,7 @@ lazy val scioTensorFlow: Project = Project(
       (testLoader in Test).value,
        (dependencyClasspath in Test).value)
 ).dependsOn(
+  scioAvro,
   scioCore,
   scioTest % "test->test"
 )
